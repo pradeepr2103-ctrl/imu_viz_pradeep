@@ -1,0 +1,42 @@
+cmake_minimum_required(VERSION 3.16)
+project(ESP32BodyTrackingVisualizer CXX C)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_C_STANDARD 11)
+
+# Find required packages
+find_package(OpenGL REQUIRED)
+find_package(glfw3 REQUIRED)
+find_package(assimp REQUIRED)
+find_package(Threads REQUIRED)
+
+# GLAD loader (static library)
+add_library(glad STATIC third_party/glad/src/gl.c)
+target_include_directories(glad PUBLIC third_party/glad/include)
+
+# Main visualizer executable
+add_executable(body_tracking_visualizer
+    visualizer/src/main.cpp
+    visualizer/src/Model.cpp
+    visualizer/src/MotionRecorder.cpp
+    visualizer/src/Network.cpp
+    visualizer/src/Renderer.cpp
+)
+
+target_include_directories(body_tracking_visualizer PRIVATE
+    visualizer/include
+    third_party/glad/include
+)
+
+target_link_libraries(body_tracking_visualizer PRIVATE
+    glad
+    OpenGL::GL
+    glfw
+    assimp
+    Threads::Threads
+    ${CMAKE_DL_LIBS}
+)
+
+# Enable compiler warnings
+target_compile_options(body_tracking_visualizer PRIVATE -Wall -Wextra)
