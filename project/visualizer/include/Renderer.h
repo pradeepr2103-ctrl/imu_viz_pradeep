@@ -6,6 +6,7 @@
 #include <string>
 #include "Model.h"
 #include "MathTypes.h"
+#include "Skeleton.h"
 
 namespace mocap {
 
