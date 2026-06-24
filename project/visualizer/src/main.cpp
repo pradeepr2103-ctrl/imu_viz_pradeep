@@ -149,7 +149,7 @@ int main(){
         // ── Update UDP sensor data ───────────────────────────────────────────
         if(udpOk){
             auto samples=udp.getAll();
-            for(int i=0;i<10;i++){
+            ffor(int i=0;i<mocap::kNumSensors;i++){
                 if(samples[i].received)
                     livePose[i]={samples[i].qw,samples[i].qx,
                                  samples[i].qy,samples[i].qz};
