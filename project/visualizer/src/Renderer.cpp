@@ -241,7 +241,7 @@ void Renderer::uploadBones(){
 
 Mat4 Renderer::buildView(float distZ, float angleY) const {
     // Fixed world-space target: mid-height of the scaled model
-    Vec3 center = {0.0f, 0.88f, 0.0f};
+    Vec3 center = {0.0f, 1.3f, 0.0f};
     Vec3 eye = {
         center.x + sinf(angleY) * distZ,
         center.y,
@@ -269,10 +269,9 @@ Vec3 Renderer::meshCenter() const {
 // Pure uniform scale: only touch m[0], m[5], m[10]; leave all else as identity.
 static Mat4 modelMatrix() {
     Mat4 m = Mat4::identity();
-    m.m[0]  =  0.01f;   // X scale
-    m.m[5]  = -0.01f;   // FIX: negate Y to flip model upright
-    m.m[10] =  0.01f;   // Z scale
-    m.m[13] =  1.76f;   // FIX: translate up by model height (176cm * 0.01)
+    m.m[0]  =  0.01f;
+    m.m[5]  =  0.01f;   // positive Y — model was already correct orientation
+    m.m[10] = -0.01f;   // negate Z to flip front-to-back (fixes upside-down)
     return m;
 }
 
@@ -302,7 +301,7 @@ void Renderer::renderLive(const std::array<Quat,kNumSensors>& pose){
 
     float aspect = (float)W / (float)H;
     Mat4 proj = buildProj(aspect);
-    Mat4 view = buildView(2.5f, 0.f);
+    Mat4 view = buildView(3.5f, 0.f);
     Mat4 mdl  = modelMatrix();
 
     drawMesh(proj, view, mdl, {0.90f, 0.72f, 0.62f});
