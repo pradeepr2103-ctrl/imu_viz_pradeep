@@ -268,11 +268,18 @@ Vec3 Renderer::meshCenter() const {
 // The Mixamo FBX/GLB Y-axis IS the up axis in the bind pose, so no rotation needed.
 // Pure uniform scale: only touch m[0], m[5], m[10]; leave all else as identity.
 static Mat4 modelMatrix() {
-    Mat4 m = Mat4::identity();
-    m.m[0]  =  0.01f;
-    m.m[5]  =  0.01f;   // positive Y — model was already correct orientation
-    m.m[10] = -0.01f;   // negate Z to flip front-to-back (fixes upside-down)
-    return m;
+    // Rotate 180° around X to flip Y direction (head->up)
+    Mat4 rot = Mat4::identity();
+    rot.m[5]  = -1.0f;  // cos(180) on Y axis
+    rot.m[10] = -1.0f;  // cos(180) on Z axis
+    // (other elements stay identity)
+
+    // Uniform centimetre‑to‑metre scale
+    Mat4 scale = Mat4::identity();
+    scale.m[0] = scale.m[5] = scale.m[10] = 0.01f;
+
+    // First rotate, then scale: M = Scale * Rotation
+    return scale * rot;
 }
 
 void Renderer::drawMesh(const Mat4& proj, const Mat4& view,
