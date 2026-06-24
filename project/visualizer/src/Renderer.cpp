@@ -269,10 +269,10 @@ Vec3 Renderer::meshCenter() const {
 // Pure uniform scale: only touch m[0], m[5], m[10]; leave all else as identity.
 static Mat4 modelMatrix() {
     Mat4 m = Mat4::identity();
-    m.m[0]  = 0.01f;   // X scale
-    m.m[5]  = 0.01f;   // Y scale  (positive = Y up, correct)
-    m.m[10] = 0.01f;   // Z scale
-    // no translation — feet are at Y=0 in GLB, which stays at Y=0 in world
+    m.m[0]  =  0.01f;   // X scale
+    m.m[5]  = -0.01f;   // FIX: negate Y to flip model upright
+    m.m[10] =  0.01f;   // Z scale
+    m.m[13] =  1.76f;   // FIX: translate up by model height (176cm * 0.01)
     return m;
 }
 
